@@ -1,0 +1,71 @@
+
+html {
+	box-sizing: border-box;
+	height: 100%;
+	width: 100%;
+	background: #555;
+}
+
+body {
+	height: inherit;
+}
+
+html .background {
+	position: absolute;
+	background: #fff;
+	background: url(grid-bg.png) 50% 50%;
+	height: 100%;
+	width: 100%;
+	z-index: -1;
+}
+
+html.dropping .background {
+	-webkit-transform: scale(0.97);
+}
+
+.droppable {
+	box-sizing: border-box;
+	height: inherit;
+
+	text-align: center;
+}
+
+.droppable.dropping {
+	-webkit-transform: scale(0.97);
+	border: solid 1px #fff;
+	box-shadow: 0 1px 4px #000;
+	background: rgba(64, 64, 64, .2);
+}
+
+.droppable>.tips {
+	margin-top: 60px;
+	display: inline-block;
+	padding-top: 256px;
+
+	border-bottom: solid 5px #000;
+	background: url(image.png) no-repeat 54% 0;
+	opacity: 0;
+
+	color: #000;
+	font-size: 28px;
+	font-weight: bold;
+	font-family: Arial, Helvetica, sans-serif;
+
+	cursor: default;
+}
+
+.droppable.dropping>.tips {
+	opacity: .4;
+}
+
+html .background,
+.droppable,
+.droppable>.tips {
+	transition: all ease-in-out 0.2s;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}

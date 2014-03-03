@@ -1,0 +1,9 @@
+﻿{
+	"name": "Pure Newtab",
+	"version": "0.1",
+	"manifest_version": 2,
+	"description": "A pure newtab with a customizable background.",
+	"chrome_url_overrides" : {
+		"newtab": "newtab.html"
+	}
+}
