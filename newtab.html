@@ -1,13 +1,42 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<link rel="stylesheet" type="text/css" href="newtab.css">
+    <link rel="stylesheet" type="text/css" href="newtab.css">
+    <link rel="stylesheet" type="text/css" href="dropdown-4.css">
 </head>
+
 <body>
-	<div class="background"></div>
-	<div class="droppable" id="drag-content">
-		<div class="tips">DROP TO CHANGE BACKGROUND</div>
+    <div class="background"></div>
+    <div id="drop-content">
+        <div class="tips">DROP TO CHANGE BACKGROUND</div>
+    </div>
+    <div class="message hide">
+        <span>Message Here</span>
+    </div>
+    <div id="droppable"></div>
+    <div id="options-container">
+		<select id="repeat-options" class="cd-select">
+			<option value="-1" selected>Repeat Both</option>
+			<option value="repeat">Repeat Both</option>
+			<option value="repeat-x">Repeat X</option>
+			<option value="repeat-y">Repeat Y</option>
+			<option value="no-repeat">No Repeat</option>
+		</select>
+		<select id="size-options" class="cd-select">
+			<option value="-1" selected>Image Size</option>
+			<option value="initial">Image Size</option>
+			<option value="stretching">Stretching</option>
+			<option value="cover">Cover</option>
+		</select>
+		<div id="btn-close" class="button-container"><div class="button">Close</div></div>
+		<div id="btn-default" class="button-container"><div class="button">Default</div></div>
+		<div class="clear"></div>
 	</div>
+	<div id="btn-change" class="button-container"><div class="button">Options</div></div>
 </body>
+<script type="text/javascript" src="jquery-2.1.0.min.js"></script>
+<script type="text/javascript" src="jquery.dropdown.js"></script>
 <script type="text/javascript" src="newtab.js"></script>
+
 </html>

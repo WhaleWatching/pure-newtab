@@ -1,8 +1,14 @@
 ﻿{
 	"name": "Pure Newtab",
-	"version": "0.1",
+	"version": "1.0",
 	"manifest_version": 2,
-	"description": "A pure newtab with a customizable background.",
+	"description": "A newtab with a pure customizable background.",
+	"permissions": 
+	[
+		"http://*/*",
+		"https://*/*",
+		"ftp://*/*"
+	],
 	"chrome_url_overrides" : {
 		"newtab": "newtab.html"
 	}

@@ -1,22 +1,35 @@
+/*
+ *By Edward Cheng
+ *Under GPLv2 Licence
+ */
 
-var html = document.getElementsByTagName('html')[0];
-var dragContent = document.getElementById('drag-content');
-var background = document.getElementsByClassName('background')[0];
+var _html = document.getElementsByTagName('html')[0];
+var _dropContent = document.getElementById('drop-content');
+var _droppable = document.getElementById('droppable');
+var _background = document.getElementsByClassName('background')[0];
+var _messageContent = document.getElementsByClassName('message')[0];
+var _message = _messageContent.children[0];
+var _options = document.getElementById('options-container');
+var _changeBtn = document.getElementById('btn-change');
+
+/*
+ * From StackOverflow
+ */
 
 function convertImgToBase64(url, callback, outputFormat){
     var canvas = document.createElement('CANVAS'),
         ctx = canvas.getContext('2d'),
         img = new Image;
     img.onload = function(){
-        img.crossOrigin = 'Anonymous';
         canvas.height = img.height;
         canvas.width = img.width;
         ctx.drawImage(img,0,0);
         var dataURL = canvas.toDataURL(outputFormat || 'image/png');
         callback.call(this, dataURL);
         // Clean up
-        canvas = null; 
+        canvas = null;
     };
+    img.crossOrigin = 'Anonymous';
     img.src = url;
 }
 
@@ -29,44 +42,132 @@ function isURL(str) {
     }
 }
 
-if(localStorage['costom'] == undefined)
-    localStorage['costom'] = false;
+/*
+ * Save & load image from localStorage
+ */
 
 function saveImg(data) {
     localStorage['bg-img'] = data;
-    localStorage['costom'] = true;
+    localStorage['costom'] = 'true';
     setBackground(data);
 }
 
 function saveDefault() {
-    localStorage['costom'] = false;
+    localStorage['costom'] = 'false';
+    _background.style.background = 'url(grid-bg.png) 50% 50%';
+    _background.style.backgroundSize = 'initial';
+    $._sizeOptions.selectlabel.text('Image Size');
+    _background.style.backgroundRepeat = 'repeat';
+    $._repeatOptions.selectlabel.text('Repeat Both');
+    if(localStorage['costom'] == 'true'){
+        $('#size-options').parent().fadeIn();
+        $('#repeat-options').parent().fadeIn();
+    }
+    else 
+    {
+        $._sizeOptions.close();
+        $._repeatOptions.close();
+        $('#size-options').parent().fadeOut();
+        $('#repeat-options').parent().fadeOut();
+    }
 }
 
 function setBackground(data) {
-    background.style.background = 'url(' + data + ') 50% 50%';
+    if(data)
+        _background.style.background = '#fff url(' + data + ') 50% 50%';
+    _background.style.backgroundSize = localStorage['size'];
+    _background.style.backgroundRepeat = localStorage['repeat'];
+    if(localStorage['costom'] == 'true'){
+        $('#size-options').parent().fadeIn();
+        $('#repeat-options').parent().fadeIn();
+    }
+    else 
+    {
+        $._sizeOptions.close();
+        $._repeatOptions.close();
+        $('#size-options').parent().fadeOut();
+        $('#repeat-options').parent().fadeOut();
+    }
 }
 
-if(localStorage['costom'] == 'true')
+if(localStorage['costom'] == undefined)
 {
-    setBackground(localStorage['bg-img']);
+    localStorage['costom'] = 'false';
+    localStorage['repeat'] = 'repeat';
+    localStorage['size'] = 'initial';
 }
 
-document.getElementsByClassName('tips')[0].onselectstart = function() {
-    return false;
+
+switch(localStorage['repeat']) {
+    case 'repeat':
+        $('#repeat-options option[value=repeat]').attr('selected', 'selected');
+        break;
+    case 'repeat-x':
+        $('#repeat-options option[value=repeat-x]').attr('selected', 'selected');
+        break;
+    case 'repeat-y':
+        $('#repeat-options option[value=repeat-y]').attr('selected', 'selected');
+        break;
+    case 'no-repeat':
+        $('#repeat-options option[value=no-repeat]').attr('selected', 'selected');
+        break;
+    }
+    switch(localStorage['size']) {
+    case 'initial':
+        $('#size-options option[value=initial]').attr('selected', 'selected');
+        break;
+    case '100% 100%':
+        $('#size-options option[value=stretching]').attr('selected', 'selected');
+        break;
+    case 'cover':
+        $('#size-options option[value=cover]').attr('selected', 'selected');
+        break;
 }
-dragContent.ondragover = function() {
+
+/*
+ * Show message
+ */
+
+function showMessage(message) {
+    _messageContent.classList.remove('hide');
+    setTimeout(function() {
+        _messageContent.classList.add('hide');
+    }, 800);
+    _message.innerHTML = message;
+}
+
+function showOptions() {
+    _html.classList.add('dropping');
+    _dropContent.classList.add('dropping');
+    _options.classList.add('active');
+    _changeBtn.classList.add('hide');
+
+}
+
+function hideOptions() {
+    _html.classList.remove('dropping');
+    _dropContent.classList.remove('dropping');
+    _options.classList.remove('active');
+    _changeBtn.classList.remove('hide');
+    $._sizeOptions.close();
+    $._repeatOptions.close();
+}
+
+/*
+ * Bind events
+ */
+
+_droppable.ondragover = function() {
     event.preventDefault();
-    html.classList.add('dropping');
-    dragContent.classList.add('dropping');
+    showOptions();
     return false;
 };
-dragContent.ondragend = function() {
+_droppable.ondragend = function() {
     event.preventDefault();
-    html.classList.remove('dropping');
-    dragContent.classList.remove('dropping');
+    hideOptions();
     return false;
 };
-dragContent.ondrop = function(event) {
+_droppable.ondrop = function(event) {
     event.preventDefault();
     eventText = event.dataTransfer.getData('Text');
     eventFiles = event.dataTransfer.files;
@@ -89,26 +190,87 @@ dragContent.ondrop = function(event) {
                 {
                     saveImg(base64Img);
                 }
+                else
+                {
+                    showMessage('Please drop a valid image url or image file.')
+                }
             });
         }
         else
-            console.log('check: failed');
+            showMessage('Please drop a valid image url or image file.')
     }
     else if(eventFiles != undefined)
     {
         console.log('get: files');
         var file = eventFiles[0];
         if(file.type.indexOf('image') == 0)
+        {
             console.log('isImg');
-        else
-            console.log('notImg');
-        var reader = new FileReader();
-        reader.onload = function(event) {
-            saveImg(event.target.result);
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                saveImg(event.target.result);
+            }
+            reader.readAsDataURL(file);
         }
-        reader.readAsDataURL(file);
+        else
+            showMessage('Please drop a valid image url or image file.')
     }
-    html.classList.remove('dropping');
-    dragContent.classList.remove('dropping');
+    else
+        showMessage('Please drop a valid image url or image file.')
+    hideOptions();
     return false;
 };
+
+$(function() {
+    $._repeatOptions = $('#repeat-options').dropdown({onOptionSelect: function(opt) {
+        switch(opt.text())
+        {
+        case 'Repeat Both':
+            localStorage['repeat'] = 'repeat';
+            break;
+        case 'Repeat X':
+            localStorage['repeat'] = 'repeat-x';
+            break;
+        case 'Repeat Y':
+            localStorage['repeat'] = 'repeat-y';
+            break;
+        case 'No Repeat':
+            localStorage['repeat'] = 'no-repeat';
+            break;
+        }
+        setBackground();
+    }});
+    $._sizeOptions = $('#size-options').dropdown({onOptionSelect: function(opt) {
+        switch(opt.text())
+        {
+        case 'Image Size':
+            localStorage['size'] = 'initial';
+            break;
+        case 'Stretching':
+            localStorage['size'] = '100% 100%';
+            break;
+        case 'Cover':
+            localStorage['size'] = 'cover';
+            break;
+        }
+        setBackground();
+    }});
+
+    $('#btn-close').click(function() {
+        hideOptions();
+    });
+    $('#btn-change').click(function() {
+        showOptions();
+    });
+    $('#btn-default').click(function() {
+        saveDefault();
+    });
+
+    if(localStorage['costom'] == 'true')
+        setBackground(localStorage['bg-img']);
+    else
+    {
+        $('#size-options').parent().fadeOut();
+        $('#repeat-options').parent().fadeOut();
+    }
+});
