@@ -95,6 +95,8 @@ if(localStorage['costom'] == undefined)
     localStorage['costom'] = 'false';
     localStorage['repeat'] = 'repeat';
     localStorage['size'] = 'initial';
+    $('#welcome').fadeIn();
+    $('#btn-change').addClass('show');
 }
 
 
@@ -260,6 +262,8 @@ $(function() {
         hideOptions();
     });
     $('#btn-change').click(function() {
+        $('#welcome').fadeOut();
+        $('#btn-change').removeClass('show');
         showOptions();
     });
     $('#btn-default').click(function() {

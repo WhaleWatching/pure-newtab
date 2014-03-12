@@ -171,14 +171,31 @@ html .background,
 	position: fixed;
 	right: 3%;
 	bottom: 4px;
-	opacity: .2;
+	opacity: .1;
 	transition: all .2s;
 }
 
+#btn-change.show,
 #btn-change:hover {
 	opacity: 1;
 }
 
 #btn-change.hide {
 	bottom: -20%;
+}
+
+#welcome {
+	display: none;
+	position: absolute;
+	top: 3%;
+	left: 3%;
+	padding: 20px;
+	background: #fdfdfd;
+	border: solid 2px #fff;
+	outline: none;
+	box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+	color: #999;
+	font-weight: 700;
+	font-size: 16px;
+	transition: all .1s;
 }
