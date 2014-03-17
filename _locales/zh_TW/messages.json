@@ -1,0 +1,47 @@
+{
+	"extension_name": {
+		"message": "純新標籤頁"
+	},
+	"thanks": {
+		"message": "感謝使用！"
+	},
+	"first_tips": {
+		"message": "請點擊右下角的按鈕設置您的背景"
+	},
+	"opt_image_size": {
+		"message": "原圖大小"
+	},
+	"opt_stretching": {
+		"message": "拉伸"
+	},
+	"opt_cover": {
+		"message": "填充"
+	},
+	"opt_repeat_both": {
+		"message": "背景平鋪"
+	},
+	"opt_repeat_x": {
+		"message": "僅水平平鋪"
+	},
+	"opt_repeat_y": {
+		"message": "僅豎直平鋪"
+	},
+	"opt_no_repeat": {
+		"message": "不平鋪"
+	},
+	"drop_tips": {
+		"message": "釋放圖片文件或者URL更改背景"
+	},
+	"btn_change": {
+		"message": "選項"
+	},
+	"btn_close": {
+		"message": "關閉"
+	},
+	"btn_default": {
+		"message": "默認背景"
+	},
+	"error_drop": {
+		"message": "請拖放可用的圖片文件或者有效圖片網址"
+	}
+}

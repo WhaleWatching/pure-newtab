@@ -1,0 +1,47 @@
+{
+	"extension_name": {
+		"message": "纯新标签页"
+	},
+	"thanks": {
+		"message": "感谢使用！"
+	},
+	"first_tips": {
+		"message": "请点击右下角的按钮设置您的背景"
+	},
+	"opt_image_size": {
+		"message": "原图大小"
+	},
+	"opt_stretching": {
+		"message": "拉伸"
+	},
+	"opt_cover": {
+		"message": "填充"
+	},
+	"opt_repeat_both": {
+		"message": "背景平铺"
+	},
+	"opt_repeat_x": {
+		"message": "仅水平平铺"
+	},
+	"opt_repeat_y": {
+		"message": "仅竖直平铺"
+	},
+	"opt_no_repeat": {
+		"message": "不平铺"
+	},
+	"drop_tips": {
+		"message": "释放图片文件或者URL更改背景"
+	},
+	"btn_change": {
+		"message": "选项"
+	},
+	"btn_close": {
+		"message": "关闭"
+	},
+	"btn_default": {
+		"message": "默认背景"
+	},
+	"error_drop": {
+		"message": "请拖放可用的图片文件或者有效图片网址"
+	}
+}

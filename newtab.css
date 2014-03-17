@@ -28,8 +28,6 @@ body {
 
 html .background {
 	position: absolute;
-	background: #fff;
-	background: url(grid-bg.png) 50% 50%;
 	height: 100%;
 	width: 100%;
 	z-index: -1;
@@ -43,21 +41,21 @@ html.dropping .background {
 	clear: both;
 }
 
-#drop-content {
+#drop-indicator {
 	box-sizing: border-box;
 	height: inherit;
 
 	text-align: center;
 }
 
-#drop-content.dropping {
+html.dropping #drop-indicator {
 	-webkit-transform: scale(0.97);
 	border: solid 1px #fff;
 	box-shadow: 0 1px 4px #000;
 	background: rgba(64, 64, 64, .2);
 }
 
-#drop-content>.tips {
+#drop-indicator>.tips {
 	margin-top: 60px;
 	display: inline-block;
 	padding-top: 256px;
@@ -73,17 +71,20 @@ html.dropping .background {
 	cursor: default;
 }
 
-#drop-content.dropping>.tips {
+html.dropping #drop-indicator>.tips {
 	opacity: .4;
 }
 
-html .background,
-#drop-content,
-#drop-content>.tips {
+html .background {
+	transition: -webkit-transform ease-in-out 0.2s;
+}
+
+#drop-indicator,
+#drop-indicator>.tips {
 	transition: all ease-in-out 0.2s;
 }
 
-#droppable {
+#drop-layer {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -198,4 +199,154 @@ html .background,
 	font-weight: 700;
 	font-size: 16px;
 	transition: all .1s;
+}
+
+/*
+ * Modified dropdown styles
+ * URL: http://tympanus.net/Development/SimpleDropDownEffects/index4.html
+ */
+
+
+.cd-dropdown,
+.cd-select {
+	position: relative;
+	width: 200px;
+	margin-bottom: 10px;
+	display: block;
+}
+
+.cd-dropdown > span {
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	color: #999;
+	font-weight: 700;
+	font-size: 16px;
+	background: #fdfdfd;
+	border: solid 2px #fff;
+	display: block;
+	padding: 0 30px 0 10px;
+	position: relative;
+	cursor: pointer;
+}
+
+.cd-dropdown > span:hover {
+	background: #fefefe;
+	color: #111;
+}
+
+.cd-dropdown > span:after {
+	content: '\25BC';
+	position: absolute;
+	right: 0px;
+	top: 15%;
+	width: 28px;
+	text-align: center;
+	font-size: 12px;
+	padding: 0 2px 0 0;
+	height: 70%;
+	line-height: 22px;
+	border-left: 1px solid #ddd;
+}
+
+.cd-dropdown.cd-active > span:after {
+	content: '\25B2';
+}
+
+.cd-dropdown ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	display: block;
+	position: relative;
+}
+
+.cd-dropdown ul li {
+	display: block;
+}
+
+.cd-dropdown ul li span {
+	width: 100%;
+	background: #fff;
+	line-height: 30px;
+	padding: 0 10px;
+	display: block;
+	color: #777;
+	cursor: pointer;
+	font-weight: 700;
+}
+
+.cd-dropdown > span,
+.cd-dropdown ul li span {
+	-webkit-backface-visibility: hidden;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.cd-dropdown > span span[class^="icon-"],
+.cd-dropdown > span span[class*=" icon-"]{
+	padding: 0 30px 0 45px;
+}
+
+/* Select fallback styling */
+.cd-select {
+	border: 1px solid #ddd;
+}
+
+.cd-dropdown {
+	-webkit-perspective: 800px;
+	perspective: 800px;
+}
+
+.cd-dropdown > span {
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+
+	-webkit-transform-origin: 50% 0%;
+	transform-origin: 50% 0%;
+
+	-webkit-transition: -webkit-transform .3s;
+	transition: transform .3s;
+}
+
+.cd-dropdown > span:active {
+	-webkit-transform: rotateX(60deg);
+	transform: rotateX(60deg);
+}
+
+.cd-dropdown > span,
+.cd-dropdown ul li:nth-last-child(-n+3) span {
+	box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.cd-dropdown ul {
+	position: absolute;
+	top: 0px;
+	width: 100%;
+}
+
+.cd-dropdown ul li {
+	position: absolute;
+	width: 100%;
+}
+
+.cd-active.cd-dropdown > span {
+	color: #333;
+}
+
+.cd-active.cd-dropdown > span,
+.cd-active.cd-dropdown ul li span {
+	box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.cd-dropdown > span,
+.cd-active.cd-dropdown ul li span {
+	-webkit-transition: all 0.1s linear 0s;
+	transition: all 0.1s linear 0s;
+}
+
+.cd-active.cd-dropdown ul li span:hover {
+	background: #333;
+	color: #fff;
 }

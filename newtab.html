@@ -3,46 +3,43 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="newtab.css">
-    <link rel="stylesheet" type="text/css" href="dropdown-4.css">
 </head>
 
 <body>
     <div class="background"></div>
-    <div id="drop-content">
-        <div class="tips">DROP TO CHANGE BACKGROUND</div>
+    <div id="drop-indicator">
+        <div class="tips" i18n="drop_tips">DROP TO CHANGE BACKGROUND</div>
     </div>
     <div class="message hide">
         <span>Message Here</span>
     </div>
-    <div id="droppable"></div>
+    <div id="drop-layer"></div>
     <div id="options-container">
 		<select id="repeat-options" class="cd-select">
-			<option value="-1" selected>Repeat Both</option>
-			<option value="repeat">Repeat Both</option>
-			<option value="repeat-x">Repeat X</option>
-			<option value="repeat-y">Repeat Y</option>
-			<option value="no-repeat">No Repeat</option>
+			<option value="-1" selected i18n="opt_repeat_both">Repeat Both</option>
+			<option value="repeat" data="repeat" i18n="opt_repeat_both">Repeat Both</option>
+			<option value="repeat-x" data="repeat-x" i18n="opt_repeat_x">Repeat X</option>
+			<option value="repeat-y" data="repeat-y" i18n="opt_repeat_y">Repeat Y</option>
+			<option value="no-repeat" data="no-repeat" i18n="opt_no_repeat">No Repeat</option>
 		</select>
 		<select id="size-options" class="cd-select">
-			<option value="-1" selected>Image Size</option>
-			<option value="initial">Image Size</option>
-			<option value="stretching">Stretching</option>
-			<option value="cover">Cover</option>
+			<option value="-1" selected i18n="opt_image_size">Image size</option>
+			<option value="initial" data="initial" i18n="opt_image_size">Image size</option>
+			<option value="stretching" data="100% 100%" i18n="opt_stretching">Stretching</option>
+			<option value="cover" data="cover" i18n="opt_cover">Cover</option>
 		</select>
-		<div id="btn-close" class="button-container"><div class="button">Close</div></div>
-		<div id="btn-default" class="button-container"><div class="button">Default</div></div>
+		<div id="btn-close" class="button-container"><div class="button" i18n="btn_close">Close</div></div>
+		<div id="btn-default" class="button-container"><div class="button" i18n="btn_default">Default</div></div>
 		<div class="clear"></div>
 	</div>
 	<div id="welcome">
-		<h2 style="color: #111; line-height: .8em;">Pure Newtab</h2>
+		<h2 style="color: #111; line-height: .8em;" i18n="extension_name">Pure Newtab</h2>
 		<span style="font-size: 12px; color: #111;">By Edward Cheng</span>
 		<br><br>
-		Thanks for using!
-		<br>
-		Click right bottom button to start.
-		<br>
+		<p i18n="thanks">Thanks for using!</p>
+		<p i18n="first_tips">Click right bottom button to start.</p>
 	</div>
-	<div id="btn-change" class="button-container"><div class="button">Options</div></div>
+	<div id="btn-change" class="button-container"><div class="button" i18n="btn_change">Options</div></div>
 </body>
 <script type="text/javascript" src="jquery-2.1.0.min.js"></script>
 <script type="text/javascript" src="jquery.dropdown.js"></script>

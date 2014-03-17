@@ -74,13 +74,14 @@
 
 				var $this = $( this ),
 					val = isNaN( $this.attr( 'value' ) ) ? $this.attr( 'value' ) : Number( $this.attr( 'value' ) ) ,
+					data = $this.attr( 'data' ),
 					classes = $this.attr( 'class' ),
 					label = $this.text();
 
 				val !== -1 ?
 					classes !== undefined ?
-						optshtml += '<li data-value="' + val + '"><span class="' + classes + '">' + label + '</span></li>' :
-						optshtml += '<li data-value="' + val + '"><span>' + label + '</span></li>' :
+						optshtml += '<li data-value="' + val + '"><span class="' + classes + '" data="' + data + '">' + label + '</span></li>' :
+						optshtml += '<li data-value="' + val + '" data="' + data + '"><span>' + label + '</span></li>' :
 					selectlabel = label;
 				if( $this.attr( 'selected' ) == 'selected' )
 					selectlabel = $this.html();

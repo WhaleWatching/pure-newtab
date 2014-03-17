@@ -1,0 +1,47 @@
+{
+	"extension_name": {
+		"message": "Pure Newtab"
+	},
+	"thanks": {
+		"message": "Thanks for using!"
+	},
+	"first_tips": {
+		"message": "Click right bottom button to start."
+	},
+	"opt_image_size": {
+		"message": "Image size"
+	},
+	"opt_stretching": {
+		"message": "Stretching"
+	},
+	"opt_cover": {
+		"message": "Cover"
+	},
+	"opt_repeat_both": {
+		"message": "Repeat Both"
+	},
+	"opt_repeat_x": {
+		"message": "Repeat X"
+	},
+	"opt_repeat_y": {
+		"message": "Repeat Y"
+	},
+	"opt_no_repeat": {
+		"message": "No Repeat"
+	},
+	"drop_tips": {
+		"message": "DROP TO CHANGE BACKGROUND"
+	},
+	"btn_change": {
+		"message": "Options"
+	},
+	"btn_close": {
+		"message": "Close"
+	},
+	"btn_default": {
+		"message": "Default"
+	},
+	"error_drop": {
+		"message": "Please drop a valid image url or image file"
+	}
+}
