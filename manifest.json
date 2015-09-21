@@ -14,12 +14,18 @@
   
   "author": "Edward Cheng",
 
-	"permissions": 
-	[
-		"http://*/*",
-		"https://*/*",
-		"ftp://*/*"
-	],
+  "permissions": 
+  [
+    "http://*/*",
+    "https://*/*",
+    "ftp://*/*"
+  ],
+
+  "web_accessible_resources": [
+    "bower_components/polymer/*.html",
+    "newtab.html",
+    "container.css"
+  ],
   
   "content_scripts": [
     {

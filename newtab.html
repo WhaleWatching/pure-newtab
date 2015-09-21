@@ -1,0 +1,123 @@
+<!--
+  Chrome Pure Newtab extension.
+  Project home: https://github.com/WhaleWatching/pure-newtab
+  Author: Edward Cheng
+  Require: Polymer
+  Under GPLv2
+-->
+<link rel="import" href="bower_components/polymer/polymer.html">
+<style>
+  pure-newtab,
+  pure-background,
+  pure-background-layer {
+    display: block;
+  }
+</style>
+
+<dom-module id="pure-newtab">
+  <template>
+    <style>
+      #background {
+        z-index: 0;
+      }
+    </style>
+    <pure-background id="background">
+    </pure-background>
+  </template>
+  <script>
+    Polymer({
+      is: 'pure-newtab',
+      ready: function() {
+        console.log(document.querySelector('#background'))
+      }
+    });
+  </script>
+</dom-module>
+
+<dom-module id="pure-background">
+  <template>
+    <style>
+      :host {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+      }
+      #layer-color {
+        z-index: 0;
+      }
+      #layer-primary {
+        z-index: 1;
+      }
+      #layer-preview {
+        background-color: #333;
+        z-index: 2;
+      }
+      pure-background-layer {
+        transition: opacity 0.18s;
+      }
+      .faded {
+        opacity: 0;
+      }
+    </style>
+    <pure-background-layer type="color" color="#fff" id="layer-color"></pure-background-layer>
+    <pure-background-layer type="image" id="layer-primary"></pure-background-layer>
+    <pure-background-layer type="image" id="layer-preview" class="faded"></pure-background-layer>
+  </template>
+  <script>
+    Polymer({
+      is: 'pure-background',
+      ready: function () {
+      },
+      willUpdateBackground: function(type, imageOrColor) {
+        console.log(type);
+        console.dir(this);
+      }
+    });
+  </script>
+</dom-module>
+
+<dom-module id="pure-background-layer">
+  <template>
+    <style>
+      :host {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        transition: background-color 0.18s;
+      }
+      :host[type=color] {
+        background-color: var(--background-color);
+      }
+      :host[type=image] {
+        background-image: var(--background-image);
+      }
+    </style>
+  </template>
+  <script>
+    Polymer({
+      is: 'pure-background-layer',
+      properties: {
+        type: {
+          type: String,
+          value: 'color'
+        },
+        color: {
+          type: String,
+          value: 'rgba(0,0,0,0)',
+          observer: 'didChangeColor'
+        },
+        image: {
+          type: String,
+          value: null
+        }
+      },
+      didChangeColor: function (newColor, oldColor) {
+        if(typeof(newColor) == 'string') {
+          this.customStyle['--background-color'] = newColor;
+        } else {
+          this.customStyle['--background-color'] = 'rgba(0,0,0,0)';
+        }
+      }
+    });
+  </script>
+</dom-module>

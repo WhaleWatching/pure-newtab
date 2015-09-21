@@ -1,0 +1,24 @@
+{
+  "name": "pure-newtab",
+  "version": "0.0.1",
+  "authors": [
+    "Edward Cheng <c4150221@gmail.com>"
+  ],
+  "description": "Newtab with a background only.",
+  "main": "none",
+  "moduleType": [
+    "node"
+  ],
+  "license": "GPLV2",
+  "homepage": "https://github.com/WhaleWatching/pure-newtab",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~1.1.3"
+  }
+}
