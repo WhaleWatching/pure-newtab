@@ -1,0 +1,18 @@
+{
+  "extName": {
+    "message": "Pure Newtab",
+    "description": "Extension Name"
+  },
+  "extDesc": {
+    "message": "Newtab with a background only.",
+    "description": "Extension Description"
+  },
+  "extShortName": {
+    "message": "Newtab with a background only.",
+    "description": "Extension Short Description"
+  },
+  "folderName": {
+    "message": "en",
+    "description": "Name of this folder"
+  }
+}
