@@ -28,7 +28,8 @@
     Polymer({
       is: 'pure-newtab',
       ready: function() {
-        console.log(document.querySelector('#background'))
+        console.dir(this.$.background);
+        this.$.background.willUpdateBackground('color', '#333');
       }
     });
   </script>
