@@ -20,15 +20,52 @@
       #background {
         z-index: 0;
       }
+      #control-panel {
+        z-index: 1;
+      }
     </style>
     <pure-background id="background">
     </pure-background>
+    <pure-control-panel id="control-panel">
+    </pure-control-panel>
   </template>
   <script>
     Polymer({
       is: 'pure-newtab',
       attached: function() {
-        this.$['background'].willUpdateBackground('rgba(255,128,0,255)');
+        this.$['background'].updateBackground('rgba(255,128,0,255)', 'url(https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png)');
+      }
+    });
+  </script>
+</dom-module>
+
+<dom-module id="pure-control-panel">
+  <template>
+    <style>
+      :host[state=collapsed] {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 64);
+      }
+    </style>
+    
+  </template>
+  <script>
+    Polymer({
+      is: 'pure-control-panel',
+      properties: {
+        state: {
+          type: String,
+          value: 'collapsed',
+          observer: '_didUpdateState'
+        }
+      },
+      _didUpdateState: function(newValue, oldValue) {
+        switch(newValue) {
+        case 'directory':
+
+        }
       }
     });
   </script>
@@ -58,16 +95,16 @@
   <script>
     Polymer({
       is: 'pure-background',
-      willUpdateBackground: function(color, image) {
-        console.log(color);
+      updateBackground: function(color, image) {
         this.$['layer-primary'].color = color;
         this.$['layer-primary'].image = image;
       },
-      willShowPreview: function(color, image) {
-        this.$['layer-preview'].update(color, image);
+      showPreview: function(color, image) {
+        this.$['layer-preview'].color = color;
+        this.$['layer-preview'].image = image;
         this.$['layer-preview'].classList.remove('faded');
       },
-      willHidePreview: function() {
+      hidePreview: function() {
         this.$['layer-preview'].classList.add('faded');
       }
     });
@@ -81,10 +118,15 @@
         position: absolute;
         height: 100%;
         width: 100%;
+
+        background-position: center;
         background-color: var(--background-color);
         background-image: var(--background-image);
+        background-repeat: var(--background-repeat);
+        background-size: var(--background-size);
+
         transition-property: background-color, opacity;
-        transition-duration: 0.18s;
+        transition-duration: var(--transition-duration);
       }
     </style>
   </template>
@@ -99,20 +141,50 @@
         image: {
           type: String,
           value: 'url()'
+        },
+        repeat: {
+          type: String,
+          value: 'repeat'
+        },
+        size: {
+          type: String,
+          value: 'initial'
+        },
+        animationEnabled: {
+          type: Boolean,
+          value: false,
+          observer: '_didUpdateAnimationEnabled'
         }
       },
       observers: [
-        'didUpdateBackground(color, image)'
+        '_didUpdateBackground(color, image)',
+        '_didUpdateLayout(repeat, size)'
       ],
-      didUpdateBackground: function(color, image) {
+      _didUpdateBackground: function(color, image) {
         if(typeof(color) == 'string') {
-          console.log('--background-color before: ' + this.customStyle['--background-color'])
           this.customStyle['--background-color'] = color;
-          console.log('--background-color after: ' + this.customStyle['--background-color'])
         }
         if(typeof(image) == 'string') {
           this.customStyle['--background-image'] = image;
         }
+        this.async(this.updateStyles);
+      },
+      _didUpdateLayout: function (repeat, size) {
+        if(typeof(repeat) == 'string') {
+          this.customStyle['--background-repeat'] = repeat;
+        }
+        if(typeof(size) == 'string') {
+          this.customStyle['--background-size'] = size;
+        }
+        this.async(this.updateStyles);
+      },
+      _didUpdateAnimationEnabled: function (newValue, oldValue) {
+        if (newValue) {
+          this.customStyle['--transition-duration'] = '0.28s';
+        } else {
+          this.customStyle['--transition-duration'] = '0s';
+        }
+        this.async(this.updateStyles);
       }
     });
   </script>
