@@ -27,9 +27,8 @@
   <script>
     Polymer({
       is: 'pure-newtab',
-      ready: function() {
-        console.dir(this.$.background);
-        this.$.background.willUpdateBackground('color', '#333');
+      attached: function() {
+        this.$['background'].willUpdateBackground('rgba(255,128,0,255)');
       }
     });
   </script>
@@ -43,35 +42,33 @@
         height: 100%;
         width: 100%;
       }
-      #layer-color {
+      #layer-primary {
         z-index: 0;
       }
-      #layer-primary {
-        z-index: 1;
-      }
       #layer-preview {
-        background-color: #333;
-        z-index: 2;
-      }
-      pure-background-layer {
-        transition: opacity 0.18s;
+        z-index: 1;
       }
       .faded {
         opacity: 0;
       }
     </style>
-    <pure-background-layer type="color" color="#fff" id="layer-color"></pure-background-layer>
-    <pure-background-layer type="image" id="layer-primary"></pure-background-layer>
-    <pure-background-layer type="image" id="layer-preview" class="faded"></pure-background-layer>
+    <pure-background-layer id="layer-primary"></pure-background-layer>
+    <pure-background-layer id="layer-preview" class="faded"></pure-background-layer>
   </template>
   <script>
     Polymer({
       is: 'pure-background',
-      ready: function () {
+      willUpdateBackground: function(color, image) {
+        console.log(color);
+        this.$['layer-primary'].color = color;
+        this.$['layer-primary'].image = image;
       },
-      willUpdateBackground: function(type, imageOrColor) {
-        console.log(type);
-        console.dir(this);
+      willShowPreview: function(color, image) {
+        this.$['layer-preview'].update(color, image);
+        this.$['layer-preview'].classList.remove('faded');
+      },
+      willHidePreview: function() {
+        this.$['layer-preview'].classList.add('faded');
       }
     });
   </script>
@@ -84,13 +81,10 @@
         position: absolute;
         height: 100%;
         width: 100%;
-        transition: background-color 0.18s;
-      }
-      :host[type=color] {
         background-color: var(--background-color);
-      }
-      :host[type=image] {
         background-image: var(--background-image);
+        transition-property: background-color, opacity;
+        transition-duration: 0.18s;
       }
     </style>
   </template>
@@ -98,25 +92,26 @@
     Polymer({
       is: 'pure-background-layer',
       properties: {
-        type: {
-          type: String,
-          value: 'color'
-        },
         color: {
           type: String,
-          value: 'rgba(0,0,0,0)',
-          observer: 'didChangeColor'
+          value: 'rgba(0,0,0,0)'
         },
         image: {
           type: String,
-          value: null
+          value: 'url()'
         }
       },
-      didChangeColor: function (newColor, oldColor) {
-        if(typeof(newColor) == 'string') {
-          this.customStyle['--background-color'] = newColor;
-        } else {
-          this.customStyle['--background-color'] = 'rgba(0,0,0,0)';
+      observers: [
+        'didUpdateBackground(color, image)'
+      ],
+      didUpdateBackground: function(color, image) {
+        if(typeof(color) == 'string') {
+          console.log('--background-color before: ' + this.customStyle['--background-color'])
+          this.customStyle['--background-color'] = color;
+          console.log('--background-color after: ' + this.customStyle['--background-color'])
+        }
+        if(typeof(image) == 'string') {
+          this.customStyle['--background-image'] = image;
         }
       }
     });
