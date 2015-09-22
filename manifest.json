@@ -22,9 +22,10 @@
   ],
 
   "web_accessible_resources": [
-    "bower_components/polymer/*.html",
+    "bower_components/**/*.html",
     "newtab.html",
-    "container.css"
+    "container.css",
+    "_locales/**/*"
   ],
   
   "content_scripts": [

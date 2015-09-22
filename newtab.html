@@ -6,17 +6,22 @@
   Under GPLv2
 -->
 <link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
 <style>
-  pure-newtab,
-  pure-background,
-  pure-background-layer {
-    display: block;
-  }
+pure-newtab * {
+  box-sizing: border-box;
+}
 </style>
 
 <dom-module id="pure-newtab">
   <template>
     <style>
+      #background,
+      #control-panel {
+        top: 0;
+        left: 0;
+      }
       #background {
         z-index: 0;
       }
@@ -33,7 +38,7 @@
     Polymer({
       is: 'pure-newtab',
       attached: function() {
-        this.$['background'].updateBackground('rgba(255,128,0,255)', 'url(https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png)');
+        this.$['background'].updateBackground('rgba(255,128,0,1)', 'url(https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png)');
       }
     });
   </script>
@@ -42,14 +47,24 @@
 <dom-module id="pure-control-panel">
   <template>
     <style>
-      :host[state=collapsed] {
+      :host {
+        transition-property: background-color;
+        transition-duration: 0.28s;
+      }
+      :host:not([state=collapsed]) {
         position: absolute;
         height: 100%;
         width: 100%;
-        background-color: rgba(0, 0, 0, 64);
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+      pure-information {
+        z-index: 1;
       }
     </style>
-    
+    <pure-directory>
+    </pure-directory>
+    <pure-information>
+    </pure-information>
   </template>
   <script>
     Polymer({
@@ -58,7 +73,8 @@
         state: {
           type: String,
           value: 'collapsed',
-          observer: '_didUpdateState'
+          observer: '_didUpdateState',
+          reflectToAttribute: true
         }
       },
       _didUpdateState: function(newValue, oldValue) {
@@ -71,6 +87,67 @@
   </script>
 </dom-module>
 
+<dom-module id="pure-information">
+  <template>
+    <style>
+      :host {
+        @apply(--layout);
+        @apply(--layout-horizontal);
+        @apply(--layout-end);
+        position: absolute;
+        height: 100%;
+        width: 100%;
+      }
+      footer {
+        @apply(--layout-flex);
+        text-align: right;
+      }
+    </style>
+    <footer>
+      <button>
+        <extension-localize-cnotent key="show_config"></extension-localize-cnotent>
+      </button>
+    </footer>
+  </template>
+  <script>
+    Polymer({
+      is: 'pure-information'
+    });
+  </script>
+</dom-module>
+
+<dom-module id="pure-directory">
+  <template>
+    <style>
+      :host {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <pure-bar>
+    </pure-bar>
+  </template>
+  <script>
+    Polymer({
+      is: 'pure-directory'
+    });
+  </script>
+</dom-module>
+
+<dom-module id="pure-bar">
+  <template>
+    <style>
+    </style>
+    
+  </template>
+  <script>
+    Polymer({
+      is: 'pure-bar'
+    });
+  </script>
+</dom-module>
+
 <dom-module id="pure-background">
   <template>
     <style>
@@ -78,6 +155,10 @@
         position: absolute;
         height: 100%;
         width: 100%;
+      }
+      pure-background-layer {
+        top: 0;
+        left: 0;
       }
       #layer-primary {
         z-index: 0;
@@ -185,6 +266,53 @@
           this.customStyle['--transition-duration'] = '0s';
         }
         this.async(this.updateStyles);
+      }
+    });
+  </script>
+</dom-module>
+
+<!--
+  Utils
+-->
+
+<dom-module id="extension-localize-source">
+  <script>
+    (function () {
+      var global_source = {};
+      Polymer({
+        is: 'extension-localize-source',
+        properties: {
+          lang: {
+            type: String,
+            observer: '_didUpdateLang'
+          }
+        },
+        _didUpdateLang: function (newValue, oldValue) {
+          global_source[newValue] = {};
+          this.fire('source updated', {});
+
+        }
+      });
+    })();
+  </script>
+</dom-module>
+
+<dom-module id="extension-localize-cnotent">
+  <template>
+    <extension-localize-source id="source"></extension-localize-source>
+  </template>
+  {{localize_result}}
+  <script>
+    Polymer({
+      is: 'extension-localize-cnotent',
+      properties: {
+        key: {
+          type: String,
+          observer: '_didUpdateKey'
+        }
+      },
+      _didUpdateKey: function (newValue, oldValue) {
+        this.localize_result = this.$.source.getLocalizeResultForKey(newValue);
       }
     });
   </script>
