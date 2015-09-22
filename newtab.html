@@ -7,8 +7,6 @@
 -->
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="bower_components/iron-meta/iron-meta.html">
 <style>
 pure-newtab * {
   box-sizing: border-box;
@@ -277,45 +275,3 @@ pure-newtab * {
 <!--
   Utils
 -->
-
-<dom-module id="extension-config">
-  <template>
-    <iron-meta id="metaid" key="extid" value="{{extid}}"></iron-meta>
-  </template>
-  <script>
-    Polymer({
-      is: 'extension-config',
-      properties: {
-        extid: {
-          type: String
-        }
-      }
-    });
-  </script>
-</dom-module>
-
-<dom-module id="extension-localize-cnotent">
-  <template>
-    <extension-localize-source id="source"></extension-localize-source>
-  </template>
-  {{localize_result}}
-  <script>
-    Polymer({
-      is: 'extension-localize-cnotent',
-      properties: {
-        key: {
-          type: String,
-          observer: '_didUpdateKey'
-        }
-      },
-      _didUpdateKey: function (newValue, oldValue) {
-        var ext_id = new Polymer.IronMetaQuery({key: 'extid'}).value
-        console.log('id: ' + ext_id);
-        chrome.runtime.sendMessage(ext_id, {greeting: "hello"}, function(response) {
-          console.log(response);
-        });
-
-      }
-    });
-  </script>
-</dom-module>

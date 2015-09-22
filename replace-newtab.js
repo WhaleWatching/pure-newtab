@@ -1,6 +1,5 @@
 (function (document) {
   document.close();
-  var extensionID = chrome.i18n.getMessage("@@extension_id");
   document.write(
       '<!doctype html>' +
       '<html>' +
@@ -9,7 +8,6 @@
           '<link rel="import" href="' + chrome.extension.getURL('newtab.html') + '">' +
         '</head>' +
         '<body>' +
-          '<extension-config extid="' + extensionID + '"></extension-config>' +
           '<pure-newtab></pure-newtab>' +
         '</body>' +
       '</html>'

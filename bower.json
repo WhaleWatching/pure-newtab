@@ -19,9 +19,7 @@
     "tests"
   ],
   "dependencies": {
-    "iron-ajax": "PolymerElements/iron-ajax#~1.0.4",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#~1.0.3",
-    "iron-meta": "PolymerElements/iron-meta#~1.0.3",
     "polymer": "Polymer/polymer#~1.1.3"
   }
 }
