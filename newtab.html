@@ -8,6 +8,7 @@
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="bower_components/iron-meta/iron-meta.html">
 <style>
 pure-newtab * {
   box-sizing: border-box;
@@ -38,7 +39,9 @@ pure-newtab * {
     Polymer({
       is: 'pure-newtab',
       attached: function() {
-        this.$['background'].updateBackground('rgba(255,128,0,1)', 'url(https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png)');
+        this.async(function () {
+          this.$['background'].updateBackground('rgba(255,128,0,1)', 'url(https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png)');
+        }, 1);
       }
     });
   </script>
@@ -275,25 +278,19 @@ pure-newtab * {
   Utils
 -->
 
-<dom-module id="extension-localize-source">
+<dom-module id="extension-config">
+  <template>
+    <iron-meta id="metaid" key="extid" value="{{extid}}"></iron-meta>
+  </template>
   <script>
-    (function () {
-      var global_source = {};
-      Polymer({
-        is: 'extension-localize-source',
-        properties: {
-          lang: {
-            type: String,
-            observer: '_didUpdateLang'
-          }
-        },
-        _didUpdateLang: function (newValue, oldValue) {
-          global_source[newValue] = {};
-          this.fire('source updated', {});
-
+    Polymer({
+      is: 'extension-config',
+      properties: {
+        extid: {
+          type: String
         }
-      });
-    })();
+      }
+    });
   </script>
 </dom-module>
 
@@ -312,7 +309,12 @@ pure-newtab * {
         }
       },
       _didUpdateKey: function (newValue, oldValue) {
-        this.localize_result = this.$.source.getLocalizeResultForKey(newValue);
+        var ext_id = new Polymer.IronMetaQuery({key: 'extid'}).value
+        console.log('id: ' + ext_id);
+        chrome.runtime.sendMessage(ext_id, {greeting: "hello"}, function(response) {
+          console.log(response);
+        });
+
       }
     });
   </script>

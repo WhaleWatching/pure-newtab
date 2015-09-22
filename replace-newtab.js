@@ -1,6 +1,6 @@
 (function (document) {
   document.close();
-  var currentLocale = chrome.i18n.getMessage("@@ui_locale");
+  var extensionID = chrome.i18n.getMessage("@@extension_id");
   document.write(
       '<!doctype html>' +
       '<html>' +
@@ -9,7 +9,7 @@
           '<link rel="import" href="' + chrome.extension.getURL('newtab.html') + '">' +
         '</head>' +
         '<body>' +
-          '<extension-localize-source source=""></extension-localize-source>' +
+          '<extension-config extid="' + extensionID + '"></extension-config>' +
           '<pure-newtab></pure-newtab>' +
         '</body>' +
       '</html>'

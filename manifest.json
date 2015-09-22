@@ -22,12 +22,12 @@
   ],
 
   "web_accessible_resources": [
-    "bower_components/**/*.html",
+    "bower_components/**/*",
     "newtab.html",
     "container.css",
     "_locales/**/*"
   ],
-  
+
   "content_scripts": [
     {
       "matches": [
