@@ -229,7 +229,7 @@
         "https://www.google.co.zw/_/chrome/*"
       ],
       "js": ["replace-newtab.js"],
-      "run_at": "document_end"
+      "run_at": "document_start"
     }
   ]
 	

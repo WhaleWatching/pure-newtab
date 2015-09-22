@@ -1,4 +1,5 @@
 (function (document) {
+  document.close();
   document.write(
       '<!doctype html>' +
       '<html>' +
