@@ -7,6 +7,9 @@
 -->
 <link rel="import" href="bower_components/polymer/polymer.html">
 <link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="bower_components/iron-meta/iron-meta.html">
+<link rel="import" href="bower_components/iron-signals/iron-signals.html">
+
 <style>
 pure-newtab * {
   box-sizing: border-box;
@@ -106,7 +109,7 @@ pure-newtab * {
     </style>
     <footer>
       <button>
-        <extension-localize-cnotent key="show_config"></extension-localize-cnotent>
+        <localization-content key="extName"></localization-content>
       </button>
     </footer>
   </template>
@@ -275,3 +278,56 @@ pure-newtab * {
 <!--
   Utils
 -->
+
+<dom-module id="localization-source">
+  <template>
+    <iron-meta id="source" key="localization-source"></iron-meta>
+  </template>
+  <script>
+    Polymer({
+      is: 'localization-source',
+      properties: {
+        source: {
+          type: String,
+          observer: '_didUpdateSource'
+        }
+      },
+      _didUpdateSource: function (newValue, oldValue) {
+        this.$.source.value = JSON.parse(newValue);
+        this.fire('iron-signal', {name: 'updatelocalizationsource', data: null});
+      }
+    });
+  </script>
+</dom-module>
+
+<dom-module id="localization-content">
+  <template>
+    <style>
+      :host {
+        display: inline;
+      }
+    </style>
+    <iron-signals on-iron-signal-updatelocalizationsource="_didUpdateLocalizationSource"></iron-signals>
+    <span>{{localize_result}}</span>
+  </template>
+  <script>
+    Polymer({
+      is: 'localization-content',
+      properties: {
+        key: String
+      },
+      ready: function () {
+        this.refreshContent();
+      },
+      refreshContent: function () {
+        var source_data = new Polymer.IronMetaQuery({key: 'localization-source'}).value;
+        if(source_data != undefined) {
+          this.set('localize_result', source_data[this.key].message);
+        }
+      },
+      _didUpdateLocalizationSource: function () {
+        this.refreshContent();
+      }
+    });
+  </script>
+</dom-module>
