@@ -13,12 +13,162 @@
 <style>
 pure-newtab * {
   box-sizing: border-box;
+  font-family: 'Open Sans','Helvetica Neue',Arial,'Hiragino Sans GB','Microsoft YaHei','WenQuanYi Micro Hei',sans-serif;
 }
 </style>
 
+<style is="custom-style">
+  :root {
+    --above-picture-text: {
+      color: rgba(0,0,0,0.9);
+      text-shadow: 0 0.3px 2px rgba(255,255,255,1);
+    };
+    --standard-size-small: {
+      font-size: 0.7em;
+    }
+  }
+</style>
+<style>
+  .above-picture-text {
+    color: rgba(0,0,0,0.9);
+    text-shadow: 0 0.3px 2px rgba(255,255,255,1);
+  }
+  .standard-size-small {
+    font-size: 0.7em;
+  }
+  .inherited-link {
+    color: inherit;
+  }
+</style>
+
+<!--
+  Custom reuseable elements
+-->
+<dom-module id="pure-button">
+  <template>
+    <style>
+      :host,
+      .background {
+        transition: all .1s;
+      }
+      :host {
+        position: relative;
+        padding: 10px;
+
+        background: none;
+        color: rgba(0,0,0,0.8);
+        border: 1px solid transparent;
+        border-radius: 5px;
+
+        font-size: 0.7em;
+        font-weight: bold;
+
+        outline: none!important;
+        cursor: pointer;
+      }
+      :host:hover {
+        border: 1px solid rgba(180, 240, 240, 0.3);
+      }
+      :host:focus {
+        border: 1px solid rgba(200, 240, 240, 1);
+      }
+      :host:focus .background,
+      :host:hover .background {
+        background-color: rgba(255,255,255,0.9);
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.4), 0 1px 2px rgba(0,0,22,0.9);
+      }
+      :host:active .background {
+        background-color: rgba(255,255,255,0.6);
+        box-shadow: 0 0 1px rgba(255, 255, 255, 0.4), 0 1px 2px rgba(0,0,22,0.4);
+      }
+      .background {
+        z-index: -1;
+        background-color: rgba(255,255,255,0.5);
+        box-shadow: 0 0 0px rgba(255, 255, 255, 0), 0 1px 3px rgba(0,0,22,0.2);
+        border-radius: 3px;
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        right: 3px;
+        bottom: 3px;
+      }
+
+      :host[type=clean]:not(:hover):not(:focus) .background {
+        background-color: rgba(255,255,255,0.15);
+        box-shadow: 0 0 0px rgba(255, 255, 255, 0), 0 1px 3px rgba(0,0,22,0);
+      }
+    </style>
+    <content></content>
+    <div class="background"></div>
+  </template>
+  <script>
+    Polymer({
+      is: 'pure-button',
+      extends: 'button'
+    });
+  </script>
+</dom-module>
+
+<style>
+  [scene]:not(.display) pure-bar {
+    background-color: transparent;
+    transform:translateY(-100%);
+  }
+</style>
+<dom-module id="pure-bar">
+  <template>
+    <style>
+      :host {
+        height: 60px;
+        background-color: rgba(0,0,0,0.2);
+        transition-property: background-color, transform;
+        transition-duration: 0.4s;
+      }
+    </style>
+    <content></content>
+  </template>
+  <script>
+    Polymer({
+      is: 'pure-bar'
+    });
+  </script>
+</dom-module>
+
+<style>
+  [scene]:not(.display) pure-footer {
+    transform:translateY(100%);
+    opacity: 0;
+  }
+</style>
+<dom-module id="pure-footer">
+  <template>
+    <style>
+      :host {
+        text-align: right;
+        padding: 4px 8px;
+        transition: all .4s;
+      }
+    </style>
+    <content></content>
+  </template>
+  <script>
+    Polymer({
+      is: 'pure-footer'
+    });
+  </script>
+</dom-module>
+
+
+
+<!--
+  The body
+-->
 <dom-module id="pure-newtab">
   <template>
     <style>
+      :host {
+        font-size: 16px;
+      }
       #background,
       #control-panel {
         top: 0;
@@ -48,6 +198,9 @@ pure-newtab * {
   </script>
 </dom-module>
 
+<!--
+  The control panel
+-->
 <dom-module id="pure-control-panel">
   <template>
     <style>
@@ -55,36 +208,80 @@ pure-newtab * {
         transition-property: background-color;
         transition-duration: 0.28s;
       }
-      :host:not([state=collapsed]) {
+      :host {
         position: absolute;
         height: 100%;
         width: 100%;
-        background-color: rgba(0, 0, 0, 0.4);
       }
-      pure-information {
-        z-index: 1;
+      :host[current-scene=directory] {
+        background-color: rgba(0,0,0,0.3);
+      }
+      [scene]:not(.display):not(.segueing):not(.pre-display) {
+        display: none;
+      }
+      [scene].segueing {
+        z-index: -1;
       }
     </style>
-    <pure-directory>
+    <iron-signals on-iron-signal-segue="_ironSignalPerformSegue"></iron-signals>
+    <pure-directory scene id="directory">
     </pure-directory>
-    <pure-information>
+    <pure-information scene id="information">
     </pure-information>
   </template>
   <script>
     Polymer({
       is: 'pure-control-panel',
       properties: {
-        state: {
+        currentScene: {
           type: String,
-          value: 'collapsed',
-          observer: '_didUpdateState',
+          observer: '_didUpdateScene',
           reflectToAttribute: true
         }
       },
-      _didUpdateState: function(newValue, oldValue) {
-        switch(newValue) {
-        case 'directory':
-
+      _didUpdateScene: function(newValue, oldValue) {
+        var oldScene = this.$[oldValue];
+        var newScene = this.$[newValue];
+        if(oldValue && oldScene.classList.contains('segueing')) {
+          return;
+        }
+        if(this.$$('[scene].segueing')) {
+          this.currentScene = oldValue;
+          return;
+        }
+        if(oldValue) {
+          this.hideScene(oldScene);
+        }
+        this.showScene(newScene);
+      },
+      _ironSignalPerformSegue: function (event) {
+        this.performSegue(event.detail);
+      },
+      performSegue: function (detail) {
+        if(detail.data) {
+          this.$[newValue].segueData = detail.data;
+        }
+        this.currentScene = detail.to;
+      },
+      attached: function () {
+        this.currentScene = 'information';
+      },
+      hideScene: function (scene) {
+        if (scene.classList.contains('display')) {
+          scene.classList.remove('display');
+          scene.classList.add('segueing');
+          this.async(function () {
+            scene.classList.remove('segueing');
+          }, (scene.animationDurtion ? scene.animationDurtion : 1));
+        }
+      },
+      showScene: function (scene) {
+        if (!scene.classList.contains('display')) {
+          scene.classList.add('pre-display');
+          this.async(function  () {
+            scene.classList.remove('pre-display');
+            scene.classList.add('display');
+          }, 10);
         }
       }
     });
@@ -102,20 +299,37 @@ pure-newtab * {
         height: 100%;
         width: 100%;
       }
-      footer {
+      #footer {
         @apply(--layout-flex);
-        text-align: right;
+      }
+      .author-info {
+        @apply(--standard-size-small);
+        @apply(--above-picture-text);
+        padding: 0 10px;
+      }
+      .author-info .author {
+        font-weight: bold;
       }
     </style>
-    <footer>
-      <button>
-        <localization-content key="extName"></localization-content>
+    <pure-footer id="footer">
+      <span class="author-info">
+        <span class="title"><localization-content key="pictureBy"></localization-content></span>
+        <span class="author">Edward Cheng</span>
+      </span>
+      <button is="pure-button" type="clean" id="button-show-preferences">
+        <localization-content key="showPreferences"></localization-content>
       </button>
-    </footer>
+    </pure-footer>
   </template>
   <script>
     Polymer({
-      is: 'pure-information'
+      is: 'pure-information',
+      attached: function () {
+        this.$['button-show-preferences'].addEventListener('click', function () {
+          this.fire('iron-signal', {name: 'segue', data: {to: 'directory', data: null}});
+        });
+      },
+      animationDurtion: 400
     });
   </script>
 </dom-module>
@@ -127,30 +341,47 @@ pure-newtab * {
         position: absolute;
         height: 100%;
         width: 100%;
+        @apply(--layout);
+        @apply(--layout-vertical);
+      }
+      #directory {
+        @apply(--layout-flex);
+      }
+      .about {
+        @apply(--standard-size-small);
+        padding: 7px;
+        color: rgba(255,255,255,0.8);
+        border-radius: 3px;
+        padding: 0 10px;
       }
     </style>
-    <pure-bar>
+    <pure-bar id="bar">
     </pure-bar>
+    <article id="directory">
+    </article>
+    <pure-footer>
+      <span class="about">By Edward Cheng, under GPLv2, <a class="inherited-link" target="_blank" href="https://github.com/WhaleWatching/pure-newtab">GitHub</a></span>
+      <button is="pure-button" id="done-preferences">
+        <localization-content key="donePreferences"></localization-content>
+      </button>
+    </pure-footer>
   </template>
   <script>
     Polymer({
-      is: 'pure-directory'
+      is: 'pure-directory',
+      attached: function () {
+        this.$['done-preferences'].addEventListener('click', function () {
+          this.fire('iron-signal', {name: 'segue', data: {to: 'information', data: null}});
+        });
+      },
+      animationDurtion: 400
     });
   </script>
 </dom-module>
 
-<dom-module id="pure-bar">
-  <template>
-    <style>
-    </style>
-    
-  </template>
-  <script>
-    Polymer({
-      is: 'pure-bar'
-    });
-  </script>
-</dom-module>
+<!--
+  The background
+-->
 
 <dom-module id="pure-background">
   <template>
@@ -294,7 +525,7 @@ pure-newtab * {
       },
       _didUpdateSource: function (newValue, oldValue) {
         this.$.source.value = JSON.parse(newValue);
-        this.fire('iron-signal', {name: 'updatelocalizationsource', data: null});
+        this.fire('iron-signal', {name: 'update-localization-source', data: null});
       }
     });
   </script>
@@ -307,7 +538,7 @@ pure-newtab * {
         display: inline;
       }
     </style>
-    <iron-signals on-iron-signal-updatelocalizationsource="_didUpdateLocalizationSource"></iron-signals>
+    <iron-signals on-iron-signal-update-localization-source="_didUpdateLocalizationSource"></iron-signals>
     <span>{{localize_result}}</span>
   </template>
   <script>

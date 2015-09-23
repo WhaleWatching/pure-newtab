@@ -14,5 +14,18 @@
   "folderName": {
     "message": "en",
     "description": "Name of this folder"
+  },
+
+  "showPreferences": {
+    "message": "Change",
+    "description": "Right bottom corner button"
+  },
+  "pictureBy": {
+    "message": "Picture by",
+    "description": "Current picture by"
+  },
+  "donePreferences": {
+    "message": "Done",
+    "description": "Close preferences "
   }
 }
