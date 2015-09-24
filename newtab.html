@@ -29,15 +29,19 @@ pure-newtab * {
   }
 </style>
 <style>
-  .above-picture-text {
+  pure-newtab .above-picture-text {
     color: rgba(0,0,0,0.9);
     text-shadow: 0 0.3px 2px rgba(255,255,255,1);
   }
-  .standard-size-small {
+  pure-newtab .standard-size-small {
     font-size: 0.7em;
   }
-  .inherited-link {
+  pure-newtab .inherited-link {
     color: inherit;
+  }
+  pure-newtab :focus {
+    outline: solid 1px #fff;
+    outline-offset: 3px;
   }
 </style>
 
@@ -53,6 +57,7 @@ pure-newtab * {
       }
       :host {
         position: relative;
+        z-index: 1;
         padding: 10px;
 
         background: none;
@@ -120,7 +125,7 @@ pure-newtab * {
     <style>
       :host {
         height: 60px;
-        background-color: rgba(0,0,0,0.2);
+        background-color: rgba(0,0,0,0.2); /* black trans bg */
         transition-property: background-color, transform;
         transition-duration: 0.4s;
       }
@@ -137,7 +142,6 @@ pure-newtab * {
 <style>
   [scene]:not(.display) pure-footer {
     transform:translateY(100%);
-    opacity: 0;
   }
 </style>
 <dom-module id="pure-footer">
@@ -190,9 +194,14 @@ pure-newtab * {
     Polymer({
       is: 'pure-newtab',
       attached: function() {
-        this.async(function () {
-          this.$['background'].updateBackground('rgba(255,128,0,1)', 'url(https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png)');
-        }, 1);
+        var firstUpdate = function () {
+          if(this.$['background'].updateBackground) {
+            this.$['background'].updateBackground('rgba(255,128,0,1)', 'url(https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png)');
+          } else {
+            this.async(firstUpdate, 10);
+          }
+        }
+        firstUpdate.apply(this);
       }
     });
   </script>
@@ -213,9 +222,9 @@ pure-newtab * {
         height: 100%;
         width: 100%;
       }
-      :host[current-scene=directory] {
+/*      :host[current-scene=directory] {
         background-color: rgba(0,0,0,0.3);
-      }
+      }*/
       [scene]:not(.display):not(.segueing):not(.pre-display) {
         display: none;
       }
@@ -281,7 +290,7 @@ pure-newtab * {
           this.async(function  () {
             scene.classList.remove('pre-display');
             scene.classList.add('display');
-          }, 10);
+          }, 100);
         }
       }
     });
@@ -334,6 +343,64 @@ pure-newtab * {
   </script>
 </dom-module>
 
+<dom-module id="pure-picture">
+  <template>
+    <style>
+      :host {
+        position: relative;
+        display: inline-block;
+        height: 120px;
+        width: 160px;
+        margin: 4px;
+
+        border-radius: 5px;
+        border: solid 1px transparent;
+
+        cursor: pointer;
+      }
+      :host:hover {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, .4);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+      }
+      :host:hover,
+      :host[selected] {
+        background-color: rgba(255, 255, 255, .2);
+      }
+      :host:hover #card {
+        box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+        background-color: rgba(255, 255, 255, .9);
+      }
+      :host[selected] #card,
+      :host:hover #card {
+      }
+      :host[selected],
+      :host:hover[selected] {
+        border: 1px solid rgba(255, 255, 255, 1);
+      }
+      :host[selected] {
+        box-shadow: 0 1px 3px rgba(0,0,0,.4), 0 0 1px rgba(255, 255, 255, 1) inset;
+      }
+      #card {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        right: 3px;
+        bottom: 3px;
+        background-color: rgba(255, 255, 255, .8);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        border-radius: 3px;
+        transition: all .28s;
+      }
+    </style>
+    <div id="card"></div>
+  </template>
+  <script>
+    Polymer({
+      is: 'pure-picture'
+    });
+  </script>
+</dom-module>
+
 <dom-module id="pure-directory">
   <template>
     <style>
@@ -344,8 +411,40 @@ pure-newtab * {
         @apply(--layout);
         @apply(--layout-vertical);
       }
-      #directory {
+      :host:not(.display) #directory {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      :host.display #directory {
+        /*background-color: rgba(0,0,0,0.2);*/ /* black trans bg */
+      }
+      #container {
         @apply(--layout-flex);
+        @apply(--layout);
+        @apply(--layout-horizontal);
+      }
+      #directory {
+        margin: 1px 0;
+        padding: 10px;
+
+        @apply(--layout-flex);
+        transition: background-color .4s;
+        overflow: auto;
+        transition: all .4s;
+      }
+      :host:not(.display) #side {
+        transform: translateX(100%);
+        background-color: transparent;
+      }
+      #side {
+        width: 300px;
+        margin: 1px 0 1px 1px;
+        background-color: rgba(0,0,0,0.2);
+        transition: all .4s;
+      }
+
+      :host.display pure-footer {
+        background-color: rgba(0,0,0,0.2); /* black trans bg */
       }
       .about {
         @apply(--standard-size-small);
@@ -357,10 +456,43 @@ pure-newtab * {
     </style>
     <pure-bar id="bar">
     </pure-bar>
-    <article id="directory">
+    <article id="container">
+      <section id="directory">
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture selected></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+        <pure-picture></pure-picture>
+      </section>
+      <section id="side">
+        
+      </section>
     </article>
     <pure-footer>
-      <span class="about">By Edward Cheng, under GPLv2, <a class="inherited-link" target="_blank" href="https://github.com/WhaleWatching/pure-newtab">GitHub</a></span>
+      <span class="about">Pure Newtab by Edward Cheng, under GPLv2, <a class="inherited-link" target="_blank" href="https://github.com/WhaleWatching/pure-newtab">GitHub</a></span>
       <button is="pure-button" id="done-preferences">
         <localization-content key="donePreferences"></localization-content>
       </button>
