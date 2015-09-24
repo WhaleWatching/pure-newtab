@@ -26,6 +26,12 @@ pure-newtab * {
     --standard-size-small: {
       font-size: 0.7em;
     }
+    --scene-styles: {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
   }
 </style>
 <style>
@@ -218,9 +224,7 @@ pure-newtab * {
         transition-duration: 0.28s;
       }
       :host {
-        position: absolute;
-        height: 100%;
-        width: 100%;
+        @apply(--scene-styles);
       }
 /*      :host[current-scene=directory] {
         background-color: rgba(0,0,0,0.3);
@@ -233,8 +237,8 @@ pure-newtab * {
       }
     </style>
     <iron-signals on-iron-signal-segue="_ironSignalPerformSegue"></iron-signals>
-<!--     <pure-directory scene id="directory">
-    </pure-directory> -->
+    <pure-directory scene id="directory">
+    </pure-directory>
     <pure-information scene id="information">
     </pure-information>
   </template>
@@ -258,16 +262,19 @@ pure-newtab * {
           this.currentScene = oldValue;
           return;
         }
-        switch(newValue) {
-        case 'directory':
-          if(!newScene) {
-            newScene = document.createElement('pure-directory');
-            newScene.setAttribute('scene', true);
-            this.appendChild(newScene);
-            this.$[newValue] = newScene;
-          }
-          break;
-        }
+        // Dynamically load the scene
+        // switch(newValue) {
+        // case 'directory':
+        //   if(!newScene) {
+        //     newScene = document.createElement('pure-directory');
+        //     newScene.setAttribute('scene', true);
+        //     Polymer.dom(this.root).appendChild(newScene);
+        //     console.log(this.root);
+        //     // this.$.appendChild(newScene);
+        //     // this.$[newValue] = newScene;
+        //   }
+        //   break;
+        // }
         if(oldValue) {
           this.hideScene(oldScene);
         }
@@ -314,9 +321,7 @@ pure-newtab * {
         @apply(--layout);
         @apply(--layout-horizontal);
         @apply(--layout-end);
-        position: absolute;
-        height: 100%;
-        width: 100%;
+        @apply(--scene-styles);
       }
       #footer {
         @apply(--layout-flex);
