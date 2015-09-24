@@ -233,8 +233,8 @@ pure-newtab * {
       }
     </style>
     <iron-signals on-iron-signal-segue="_ironSignalPerformSegue"></iron-signals>
-    <pure-directory scene id="directory">
-    </pure-directory>
+<!--     <pure-directory scene id="directory">
+    </pure-directory> -->
     <pure-information scene id="information">
     </pure-information>
   </template>
@@ -257,6 +257,16 @@ pure-newtab * {
         if(this.$$('[scene].segueing')) {
           this.currentScene = oldValue;
           return;
+        }
+        switch(newValue) {
+        case 'directory':
+          if(!newScene) {
+            newScene = document.createElement('pure-directory');
+            newScene.setAttribute('scene', true);
+            this.appendChild(newScene);
+            this.$[newValue] = newScene;
+          }
+          break;
         }
         if(oldValue) {
           this.hideScene(oldScene);
