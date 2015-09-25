@@ -371,6 +371,7 @@ pure-newtab * {
         border-radius: 5px;
         border: solid 1px transparent;
 
+        transition: transform .4s, opacity .4s;
         cursor: pointer;
       }
       :host:hover {
@@ -426,12 +427,12 @@ pure-newtab * {
         @apply(--layout);
         @apply(--layout-vertical);
       }
-      :host:not(.display) #directory {
+      :host:not(.display) pure-picture {
         transform: translateY(20px);
         opacity: 0;
       }
       :host.display #directory {
-        /*background-color: rgba(0,0,0,0.2);*/ /* black trans bg */
+        background-color: rgba(0,0,0,0.2); /* black trans bg */
       }
       #container {
         @apply(--layout-flex);
@@ -448,7 +449,7 @@ pure-newtab * {
         transition: all .4s;
       }
       :host:not(.display) #side {
-        transform: translateX(100%);
+        /*transform: translateX(100%);*/
         background-color: transparent;
       }
       #side {
